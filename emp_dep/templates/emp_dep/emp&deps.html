@@ -1,0 +1,103 @@
+{% extends 'emp_dep/base.html' %}
+
+{% block content %}
+    <div id="app">
+        <h1>Employees</h1>
+
+        {% csrf_token %}
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Join Date</th>
+                    <th scope="col">Age</th>
+                    <th scope="col">Departments</th>
+                    <th width="100" scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(employee, index) in employees">
+                    <th scope="row">
+                        [[ index ]]
+                    </th>
+                    <td>
+                            [[ employee.name ]]          
+                    </td>
+                    <td>[[ employee.join_date ]]</td>
+                    <td>[[ employee.age ]]</td>
+                    <td>[[ employee.departments ]]</td>
+                    <td>
+                        Nothing for now
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <!-- second table -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Salary</th>
+                    <th scope="col">Employees</th>
+                    <th width="100" scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(department, index) in departments">
+                    <th scope="row">
+                        [[ index ]]
+                    </th>
+                    <td>
+                            [[ department.name ]]          
+                    </td>
+                    <td>[[ department.salary ]]</td>
+                    <td>[[ department.employees ]]</td>
+                    <td>
+                        Nothing for now
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    let myApp = Vue.createApp({
+        delimiters: ["[[", "]]"],
+        data() {
+            return {
+                employees: [],
+                departments: []
+            }
+        },
+        async created() {
+            let response = await fetch("{% url 'employees api' %}");
+            if (response.ok) {
+                let data = await response.json();
+                this.employees = data.employees;
+            }
+            else {
+                alert("Failed to load list of employees");
+            }
+            let response2 = await fetch("{% url 'departments api' %}");
+            if (response.ok) {
+                let data = await response2.json();
+                this.departments = data.departments;
+                console.log(this.departments[0].name)
+            }
+            else {
+                alert("Failed to load list of departments");
+            }
+        },
+        methods: {
+            
+        }
+    })
+    
+    myApp.mount('#app')
+</script>
+{% endblock %}
