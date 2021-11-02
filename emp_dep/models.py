@@ -13,6 +13,7 @@ class Employee(models.Model):
             'join_date': self.join_date,
             'age': self.age,
             'departments': [str(d) for d in self.department_set.all()],
+            'api': reverse('employee api', kwargs={'employee_id': self.id}),
         }
     
     def __str__(self):
