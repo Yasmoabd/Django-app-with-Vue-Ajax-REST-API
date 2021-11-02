@@ -3,13 +3,13 @@
 {% block content %}
     <div id="app">
         <h1>Employees</h1>
-        <form>
+        <form id="addEmpForm">
             <label for="fname">Name:</label><br>
             <input type="text" id="fname" name="fname"><br>
-            <label for="lname">Last name:</label><br>
-            <input type="text" id="lname" name="lname">
+            <label for="lname">Salary:</label><br>
+            <input type="text" id="salary" name="lname">
           </form>
-        <button>Add employee</button>
+          <button type="submit" form="addEmpForm" value="Submit" v-on:click="addEmployee">Submit</button>
 
         {% csrf_token %}
 
@@ -103,8 +103,9 @@
             }
         },
         methods: {
-            async addEmployee(){
-
+            addEmployee(){
+                var nameValue = document.getElementById("fname").value;
+                alert(nameValue);
             }
         }
     })

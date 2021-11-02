@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404
 
 from .models import Employee, Department
 
+
 def employees_api(request):
     '''
         API entry point for list of countries
