@@ -6,8 +6,8 @@
         <form id="addEmpForm">
             <label for="fname">Name:</label><br>
             <input type="text" id="fname" name="fname"><br>
-            <label for="lname">Salary:</label><br>
-            <input type="text" id="salary" name="lname">
+            <label for="age">Age:</label><br>
+            <input type="text" id="age" name="age">
           </form>
           <button type="submit" form="addEmpForm" value="Submit" v-on:click="addEmployee">Submit</button>
 
@@ -93,7 +93,7 @@
                 alert("Failed to load list of employees");
             }
             let response2 = await fetch("{% url 'departments api' %}");
-            if (response.ok) {
+            if (response2.ok) {
                 let data = await response2.json();
                 this.departments = data.departments;
                 console.log(this.departments[0].name)
@@ -103,10 +103,30 @@
             }
         },
         methods: {
-            addEmployee(){
+            async addEmployee(){
                 var nameValue = document.getElementById("fname").value;
-                var salaryValue = document.getElementById("salary").value;
-                alert(nameValue);
+                var ageValue = document.getElementById("age").value;
+                var obj = {name: nameValue, age: ageValue};
+                let response = await fetch("{% url 'add employee api'%}",{method:"POST", body: JSON.stringify(obj),
+                headers: {
+                            "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken").value,
+                        }});
+                if (response.ok) {
+                    let response2 = await fetch("{% url 'employees api' %}");
+                    if (response2.ok) {
+                        let data = await response2.json();
+                        this.employees = data.employees;
+                        for(var i = 0;i<this.employees.length;i++){
+                            console.log(this.employees[i].name);
+                        }
+                    }
+                    else{
+                        alert("Failed to load employees");
+                    }
+                }
+                else{
+                    alert("Failed to add employee");
+                }
             }
         }
     })

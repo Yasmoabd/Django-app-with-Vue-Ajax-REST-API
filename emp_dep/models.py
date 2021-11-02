@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.urls import reverse
 
 class Employee(models.Model):
     name = models.CharField(max_length=200)
@@ -12,7 +12,7 @@ class Employee(models.Model):
             'name': self.name,
             'join_date': self.join_date,
             'age': self.age,
-            'departments': [str(d) for d in self.department_set.all()]
+            'departments': [str(d) for d in self.department_set.all()],
         }
     
     def __str__(self):
