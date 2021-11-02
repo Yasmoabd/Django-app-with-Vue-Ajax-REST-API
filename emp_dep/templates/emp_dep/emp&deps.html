@@ -3,6 +3,13 @@
 {% block content %}
     <div id="app">
         <h1>Employees</h1>
+        <form>
+            <label for="fname">Name:</label><br>
+            <input type="text" id="fname" name="fname"><br>
+            <label for="lname">Last name:</label><br>
+            <input type="text" id="lname" name="lname">
+          </form>
+        <button>Add employee</button>
 
         {% csrf_token %}
 
@@ -14,7 +21,7 @@
                     <th scope="col">Join Date</th>
                     <th scope="col">Age</th>
                     <th scope="col">Departments</th>
-                    <th width="100" scope="col"></th>
+                    <th width="100" scope="col">hello</th>
                 </tr>
             </thead>
             <tbody>
@@ -35,6 +42,8 @@
             </tbody>
         </table>
         <!-- second table -->
+
+        <h1>Departments</h1>
         <table class="table">
             <thead>
                 <tr>
@@ -94,7 +103,9 @@
             }
         },
         methods: {
-            
+            async addEmployee(){
+
+            }
         }
     })
     
