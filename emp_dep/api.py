@@ -20,7 +20,6 @@ def employees_api(request):
     '''
     if request.method == "POST":
         data = json.load(request)
-        print(data.get('departments'))
         e = Employee(name=data.get('name'),join_date=timezone.now(),age=data.get('age'))
         e.save()
         for departmentID in data.get('departments'):
@@ -40,9 +39,26 @@ def departments_api(request):
         API entry point for list of countries
         On POST: Create a new countries
     '''
+    if request.method == "POST":
+        data = json.load(request)
+        d = Department(name=data.get('name'),salary=data.get('salary'))
+        d.save()
+        for employeeID in data.get('employees'):
+            d.employees.add(Employee.objects.get(id=employeeID))
+        d.save()
+        return JsonResponse({})
+
     return JsonResponse({
         'departments': [
             department.to_dict()
             for department in Department.objects.all()
         ]
     })
+
+def department_api(request, department_id):
+    if request.method == "DELETE":
+        department = get_object_or_404(Department, id=department_id)
+        department.delete()
+        return JsonResponse({})
+
+    return HttpResponseBadRequest("Invalid method")

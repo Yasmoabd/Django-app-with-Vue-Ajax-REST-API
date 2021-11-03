@@ -30,7 +30,8 @@ class Department(models.Model):
             'id': self.id,
             'name': self.name,
             'salary': self.salary,
-            'employees':[str(e) for e in self.employees.all()]
+            'employees':[str(e) for e in self.employees.all()],
+            'api': reverse('department api', kwargs={'department_id': self.id}),
         }
 
     def __str__(self):
