@@ -32,6 +32,26 @@
                   <button type="button" form="addDepForm" value="Submit" v-on:click="addDepartment">Add Department</button>
             </div>
         </div>
+
+  
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          ...
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
         
 
         {% csrf_token %}
@@ -45,7 +65,8 @@
                     <th scope="col">Join Date</th>
                     <th scope="col">Age</th>
                     <th scope="col">Departments</th>
-                    <th width="100" scope="col">hello</th>
+                    <th width="100" scope="col">Delete</th>
+                    <th width="100" scope="col">Edit</th>
                 </tr>
             </thead>
             <tbody>
@@ -64,6 +85,12 @@
                             Delete
                         </button>
                     </td>
+                    <td>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" v-bind:data-bs-whatever="employee.id" v-on:click="updateEditingObject" name="employee">
+                        Edit
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -77,7 +104,8 @@
                     <th scope="col">Name</th>
                     <th scope="col">Salary</th>
                     <th scope="col">Employees</th>
-                    <th width="100" scope="col"></th>
+                    <th width="100" scope="col">Delete</th>
+                    <th width="100" scope="col">Edit</th>
                 </tr>
             </thead>
             <tbody>
@@ -95,6 +123,12 @@
                             Delete
                         </button>
                     </td>
+                    <td>
+                        <!-- Button trigger modal -->
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" v-bind:data-bs-whatever="department.id" v-on:click="updateEditingObject" name="department">
+                        Edit
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>
@@ -108,7 +142,8 @@
         data() {
             return {
                 employees: [],
-                departments: []
+                departments: [],
+                editingObject: null,
             }
         },
         async created() {
@@ -233,6 +268,21 @@
                         alert("Failed to delete department");
                     }
                 }
+            },
+
+            updateEditingObject: function(event){
+                var clicked_objectID = event.target.getAttribute('data-bs-whatever');
+                var clicked_objectType = event.target.getAttribute('name');
+                
+                if (clicked_objectType=="employee"){
+                    for(var i=0;i<this.employees.length;i++){
+                        if(this.employees[i].id==clicked_objectID){
+                            this.editingObject=this.employees[i];
+                        }
+                    }
+                }
+
+                alert(this.editingObject.name);
             },
         }
     })
