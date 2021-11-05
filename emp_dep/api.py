@@ -10,6 +10,16 @@ def employee_api(request, employee_id):
         employee = get_object_or_404(Employee, id=employee_id)
         employee.delete()
         return JsonResponse({})
+    elif request.method == "PUT":
+        data = json.load(request)
+        employee = get_object_or_404(Employee, id=employee_id)
+        employee.name=data.get('name')
+        employee.age=data.get('age')
+        employee.department_set.clear()
+        for departmentID in data.get('departments'):
+            employee.department_set.add(Department.objects.get(id=departmentID))
+        employee.save()
+        return JsonResponse({})
 
     return HttpResponseBadRequest("Invalid method")
 

@@ -35,19 +35,57 @@
 
   
   <!-- Modal -->
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal fade" id="exampleModalemp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <div class="modal-body">
-          ...
+            <form id="addEmpForm">
+                <label for="fname">Name:</label><br>
+                <input type="text" id="fnamemodal" name="fname"><br>
+                <label for="age">Age:</label><br>
+                <input type="text" id="agemodal" name="age">
+                <div>
+                    <select id="depdropmodal" name="depdrop" id="depdrop" multiple>
+                        <option v-for="(department) in departments" v-bind:value="department.id">[[ department.name ]]</option>
+                    </select>
+                </div>
+              </form>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-primary" v-on:click="EditObject">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+<!--SECOND MODAL FOR DEPS-->
+  <div class="modal fade" id="exampleModaldep" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Edit</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            <form id="addDepForm">
+                <label for="name">Name:</label><br>
+                <input type="text" id="namemodal" name="name"><br>
+                <label for="salary">Salary:</label><br>
+                <input type="text" id="salarymodal" name="salary">
+                <div>
+                    <select id="empdropmodal" name="empdrop" id="empdrop" multiple>
+                        <option v-for="(employee) in employees" v-bind:value="employee.id">[[ employee.name ]]</option>
+                    </select>
+                </div>
+              </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary" v-on:click="EditObject">Save changes</button>
         </div>
       </div>
     </div>
@@ -87,7 +125,7 @@
                     </td>
                     <td>
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" v-bind:data-bs-whatever="employee.id" v-on:click="updateEditingObject" name="employee">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModalemp" v-bind:data-bs-whatever="employee.id" v-on:click="updateEditingObject" name="employee">
                         Edit
                         </button>
                     </td>
@@ -125,7 +163,7 @@
                     </td>
                     <td>
                         <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" v-bind:data-bs-whatever="department.id" v-on:click="updateEditingObject" name="department">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModaldep" v-bind:data-bs-whatever="department.id" v-on:click="updateEditingObject" name="department">
                         Edit
                         </button>
                     </td>
@@ -144,6 +182,7 @@
                 employees: [],
                 departments: [],
                 editingObject: null,
+                editingType: null,
             }
         },
         async created() {
@@ -275,15 +314,50 @@
                 var clicked_objectType = event.target.getAttribute('name');
                 
                 if (clicked_objectType=="employee"){
+                    this.editingType="employee"
                     for(var i=0;i<this.employees.length;i++){
                         if(this.employees[i].id==clicked_objectID){
                             this.editingObject=this.employees[i];
                         }
                     }
                 }
-
-                alert(this.editingObject.name);
+                else{
+                    this.editingType="department"
+                    for(var i=0;i<this.departments.length;i++){
+                        if(this.departments[i].id==clicked_objectID){
+                            this.editingObject=this.departments[i];
+                        }
+                    }
+                }
             },
+
+            async EditObject(){
+                if(this.editingType=="employee"){
+                    var name = document.getElementById("fnamemodal").value;
+                    var age = document.getElementById("agemodal").value;
+                
+                    var selected = [];
+                    for (var option of document.getElementById('depdropmodal').options)
+                    {  
+                        if (option.selected) {
+                        selected.push(option.value);
+                        }
+                    }
+                    var obj = {name: name, age: age, departments: selected};
+                }
+        
+                let response = await fetch(this.editingObject.api,{method:"PUT", body: JSON.stringify(obj),
+                headers: {
+                            "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken").value,
+                        }});
+                if (response.ok) {
+                    this.refreshTables();
+                }
+                else{
+                    alert("Failed to Edit Employee");
+                }
+
+            }
         }
     })
     
