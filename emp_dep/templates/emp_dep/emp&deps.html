@@ -345,6 +345,18 @@
                     }
                     var obj = {name: name, age: age, departments: selected};
                 }
+                else{
+                    var name = document.getElementById("namemodal").value;
+                    var salary = document.getElementById("salarymodal").value;
+                    var selected = [];
+                    for (var option of document.getElementById('empdropmodal').options)
+                    {  
+                        if (option.selected) {
+                        selected.push(option.value);
+                        }
+                    }
+                    var obj = {name: name, salary: salary, employees: selected};
+                }
         
                 let response = await fetch(this.editingObject.api,{method:"PUT", body: JSON.stringify(obj),
                 headers: {

@@ -70,5 +70,15 @@ def department_api(request, department_id):
         department = get_object_or_404(Department, id=department_id)
         department.delete()
         return JsonResponse({})
+    elif request.method == "PUT":
+        data = json.load(request)
+        department = get_object_or_404(Department, id=department_id)
+        department.name=data.get('name')
+        department.salary=data.get('salary')
+        department.employees.clear()
+        for employeeID in data.get('employees'):
+            department.employees.add(Employee.objects.get(id=employeeID))
+        department.save()
+        return JsonResponse({})
 
     return HttpResponseBadRequest("Invalid method")
