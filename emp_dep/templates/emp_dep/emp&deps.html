@@ -34,7 +34,7 @@
         </div>
 
   
-  <!-- Modal -->
+  <!-- Modal for PUT employee -->
   <div class="modal fade" id="exampleModalemp" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -45,9 +45,9 @@
         <div class="modal-body">
             <form id="addEmpForm">
                 <label for="fname">Name:</label><br>
-                <input type="text" id="fnamemodal" name="fname"><br>
+                <input type="text" id="fnamemodal" name="fname" v-bind:value="objectname()"><br>
                 <label for="age">Age:</label><br>
-                <input type="text" id="agemodal" name="age">
+                <input type="text" id="agemodal" name="age" v-bind:value="EmpAge()">
                 <div>
                     <select id="depdropmodal" name="depdrop" id="depdrop" multiple>
                         <option v-for="(department) in departments" v-bind:value="department.id">[[ department.name ]]</option>
@@ -73,9 +73,9 @@
         <div class="modal-body">
             <form id="addDepForm">
                 <label for="name">Name:</label><br>
-                <input type="text" id="namemodal" name="name"><br>
+                <input type="text" id="namemodal" name="name" v-bind:value="objectname()"><br>
                 <label for="salary">Salary:</label><br>
-                <input type="text" id="salarymodal" name="salary">
+                <input type="text" id="salarymodal" name="salary" v-bind:value="DepSalary()">
                 <div>
                     <select id="empdropmodal" name="empdrop" id="empdrop" multiple>
                         <option v-for="(employee) in employees" v-bind:value="employee.id">[[ employee.name ]]</option>
@@ -115,7 +115,7 @@
                     <td>
                             [[ employee.name ]]          
                     </td>
-                    <td>[[ employee.join_date ]]</td>
+                    <td>[[ sliceDate(employee.join_date) ]]</td>
                     <td>[[ employee.age ]]</td>
                     <td>[[ employee.departments ]]</td>
                     <td>
@@ -369,7 +369,34 @@
                     alert("Failed to Edit Employee");
                 }
 
-            }
+            },
+
+            sliceDate(date){
+                return date.slice(0,10);
+            },
+
+            objectname(){
+                if(this.editingObject==null){
+                    return null;
+                }
+                return this.editingObject.name;
+            },
+
+            EmpAge(){
+                if(this.editingObject==null){
+                    return null;
+                }
+                return this.editingObject.age;
+            },
+
+            DepSalary(){
+                if(this.editingObject==null){
+                    return null;
+                }
+                return this.editingObject.salary;
+            },
+
+
         }
     })
     

@@ -9,6 +9,6 @@ def index(request):
     request.session['last_visit'] = str(timezone.now())
     return render(request, 'emp_dep/emp&deps.html', {
         'title': "My Employees and Departments",
-        'employees': employees,
+        
         'user': request.user,
     })
